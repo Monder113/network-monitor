@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    #terminal {
+        background-color: #000;
+        color: #00FF00;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 15px;
+        height: 60vh;
+        overflow-y: scroll;
+        white-space: pre-wrap; /* Satırların taşmasını engeller */
+        border-radius: 5px;
+    }
+    #command-input {
+        background-color: #333;
+        color: #fff;
+        border: 1px solid #555;
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+<h3>{{ switch.name }} - Live Terminal</h3>
+<div id="terminal">Connecting...</div>
+<input type="text" id="command-input" placeholder="Command here and hit Enter...">
+
+<script>
+    const switchId = {{ switch.id }};
+    const terminal = document.getElementById('terminal');
+    const commandInput = document.getElementById('command-input');
+
+    const cliSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/switch/'
+        + switchId
+        + '/cli/'
+    );
+
+    cliSocket.onopen = function(e) {
+        console.log("CLI WebSocket is connected");
+    };
+
+    cliSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        // Gelen mesajı terminal ekranına ekle
+        terminal.innerHTML += data.message + '\n';
+        // Terminali en alta kaydır
+        terminal.scrollTop = terminal.scrollHeight;
+    };
+
+    cliSocket.onclose = function(e) {
+        terminal.innerHTML += '\nConnection closed.';
+        console.error('CLI WebSocket connection is closed.');
+    };
+
+    // Input alanında Enter'a basıldığında
+    commandInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            const command = commandInput.value;
+            
+            // Komutu WebSocket üzerinden sunucuya gönder
+            cliSocket.send(JSON.stringify({
+                'command': command
+            }));
+
+            // Input alanını temizle
+            commandInput.value = '';
+        }
+    });
+</script>
+{% endblock %}

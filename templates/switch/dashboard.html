@@ -1,0 +1,33 @@
+{% for switch in switches %}
+<h2>{{ switch.name }}</h2>
+<canvas id="pingChart-{{ switch.id }}" width="400" height="100"></canvas>
+
+<script>
+var ctx = document.getElementById('pingChart-{{ switch.id }}').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [
+            {% for entry in switch.ping_history.all %}
+                "{{ entry.timestamp|date:'H:i' }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Ping Status (1=Reachable, 0=Unreachable)',
+            data: [
+                {% for entry in switch.ping_history.all %}
+                    {{ entry.is_reachable|yesno:"1,0" }}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: { beginAtZero: true, max: 1 }
+        }
+    }
+});
+</script>
+{% endfor %}

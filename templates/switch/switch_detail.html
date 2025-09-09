@@ -1,0 +1,39 @@
+<!-- templates/switch/switch_detail.html -->
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ switch.name }} - Detaylar</h1>
+    <p><strong>IP Adresi:</strong> {{ switch.ip_address }}</p>
+    <p><strong>Durum:</strong> {{ switch.get_status_display }}</p>
+    
+    <h3 class="mt-4">Yanıt Süresi Grafiği (ms)</h3>
+    <canvas id="pingHistoryChart"></canvas>
+
+    <h3 class="mt-5">Ping Geçmişi</h3>
+    <table class="table">
+        <!-- Geçmiş tablosu buraya eklenebilir -->
+    </table>
+
+    <script>
+        const ctx = document.getElementById('pingHistoryChart');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: 'Yanıt Süresi (ms)',
+                    data: {{ chart_data|safe }},
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

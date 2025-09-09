@@ -1,0 +1,26 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Device Name</th>
+            <th>IP Adress</th>
+            <th>Vendor / Model</th>
+            <th>Status</th>
+            <th>Last Seen</th>
+            <th>Manage</th> </tr>
+    </thead>
+    <tbody>
+        {% for switch in switches %}
+        <tr id="switch-row-{{ switch.id }}">
+            <td><a href="{% url 'switch_detail' switch.pk %}">{{ switch.name }}</a></td>
+            <td>{{ switch.ip_address }}</td>
+            <td>{{ switch.vendor }} / {{ switch.model }}</td>
+            <td>
+                </td>
+            <td>{{ switch.last_seen|date:"Y-m-d H:i:s"|default:"-" }}</td>
+            <td>
+                <a href="{% url 'switch_cli' switch.pk %}" class="btn btn-sm btn-primary">Terminal</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

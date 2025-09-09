@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Add a Switch</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Device Name</label>
+            {{ form.name }}
+        </div>
+        <div class="mb-3">
+            <label for="id_ip_address" class="form-label">IP Adress</label>
+            {{ form.ip_address }}
+        </div>
+        <div class="mb-3">
+            <label for="id_vendor" class="form-label">Vendor</label>
+            {{ form.vendor }}
+        </div>
+        <div class="mb-3">
+            <label for="id_model" class="form-label">Model</label>
+            {{ form.model }}
+        </div>
+        <div class="mb-3">
+            <label for="id_snmp_community" class="form-label">SNMP Community</label>
+            {{ form.snmp_community }}
+        </div>
+        <div class="mb-3">
+            <label for="id_system_description_oid" class="form-label">System Description OID</label>
+            {{ form.system_description_oid }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'switch_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+    
+{% endblock %}

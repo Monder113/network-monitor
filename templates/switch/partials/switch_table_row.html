@@ -1,0 +1,21 @@
+<td><a href="{% url 'switch_detail' switch.pk %}">{{ switch.name }}</a></td>
+
+<td>{{ switch.ip_address }}</td>
+
+<td>{{ switch.vendor }} / {{ switch.model }}</td>
+
+<td>
+    {% if switch.status == 'up' %}
+        <span class="badge bg-success">Up</span>
+    {% elif switch.status == 'down' %}
+        <span class="badge bg-danger">Down</span>
+    {% else %}
+        <span class="badge bg-secondary">Unknown</span>
+    {% endif %}
+</td>
+
+<td>{{ switch.last_seen|date:"Y-m-d H:i:s"|default:"-" }}</td>
+
+<td>
+    <a href="{% url 'switch_cli' switch.pk %}" class="btn btn-sm btn-primary">Terminal</a>
+</td>
